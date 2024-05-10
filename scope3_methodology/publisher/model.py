@@ -1,4 +1,5 @@
 """ Model for computing emissions for a publisher property """
+
 from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import Enum
@@ -105,6 +106,8 @@ class Property(CustomBaseModel):
     carbon_intensity_mt_per_employee: Optional[Decimal] = field(
         default=None, metadata={"default_eligible": True}
     )
+
+    traffic_shaping: Optional[Decimal] = field(default=1, metadata={"default_eligible": True})
 
     defaults: Optional["Property"] = field(default=None, metadata={"default_eligible": False})
 
@@ -232,5 +235,5 @@ class Property(CustomBaseModel):
             data_transfer_electricity_kwh,
             page_load_electricity_kwh,
             client_device_emissions_g_co2e_per_imp,
-            self.corporate_emissions_g_co2e_per_impression,
+            self.corporate_emissions_g_co2e_per_impression * self.traffic_shaping,
         )
